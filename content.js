@@ -202,7 +202,8 @@ function onKeyDown(keyDown) {
                     simplified: savedSearchResults[j][0],
                     traditional: savedSearchResults[j][1],
                     pinyin: savedSearchResults[j][2],
-                    definition: savedSearchResults[j][3]
+                    definition: savedSearchResults[j][3],
+                    usage: savedSearchResults[j][5]
                 };
                 entries.push(entry);
             }
@@ -510,6 +511,7 @@ function triggerSearch() {
 
     let selEndList = [];
     let originalText = getText(rangeNode, selStartOffset, selEndList, 30 /*maxlength*/);
+    let context = getText(rangeNode, Math.max(selStartOffset - 30, 0), [], 60);
 
     // Workaround for Google Docs: remove zero-width non-joiner &zwnj;
     let text = originalText.replace(zwnj, '');
@@ -520,7 +522,8 @@ function triggerSearch() {
     chrome.runtime.sendMessage({
             'type': 'search',
             'text': text,
-            'originalText': originalText
+            'originalText': originalText,
+            'context': context
         },
         processSearchResult
     );
@@ -919,12 +922,22 @@ function makeHtml(result, showToneColors) {
         let translation = entry[4].replace(/\//g, '; ');
         html += '<br><span class="' + defClass + '">' + translation + '</span><br>';
 
+        // Sentence
+        let pattern = new RegExp('(^|\\u3002)([^\\u3002]*' + entry[2] + '[^\\u3002]*(\\u3002?|$))');
+        let match = result.context.match(pattern);
+        let sentence;
+        if (match == null) {
+            sentence = result.context;
+        } else {
+            sentence = match[2];
+        }
+
         // Grammar
         if (config.grammar !== 'no' && result.grammar && result.grammar.index === i) {
             html += '<br><span class="grammar">Press "g" for grammar and usage notes.</span><br><br>';
         }
 
-        texts[i] = [entry[2], entry[1], p[1], translation, entry[3]];
+        texts[i] = [entry[2], entry[1], p[1], translation, entry[3], sentence];
     }
     if (result.more) {
         html += '&hellip;<br/>';

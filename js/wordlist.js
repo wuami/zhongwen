@@ -94,6 +94,7 @@ $(document).ready(function () {
             { data: 'pinyin' },
             { data: 'zhuyin', visible: showZhuyin },
             { data: 'definition' },
+            { data: 'usage' },
             { data: 'notes' },
         ]
     });
@@ -106,6 +107,7 @@ $(document).ready(function () {
             $('#simplified').val(entry.simplified);
             $('#traditional').val(entry.traditional);
             $('#definition').val(entry.definition);
+            $('#usage').val(entry.usage);
             $('#notes').val(entry.notes === '<i>Edit</i>' ? '' : entry.notes);
             $('#rowIndex').val(index);
 
@@ -152,6 +154,8 @@ $(document).ready(function () {
                 content += '\t';
             }
             content += entry.definition;
+            content += '\t';
+            content += entry.usage;
             content += '\t';
             content += entry.notes.replace('<i>Edit</i>', '').replace(/[\r\n]/gm, ' ');
             content += '\r\n';

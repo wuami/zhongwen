@@ -283,6 +283,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
         case 'search': {
             let response = search(request.text);
             response.originalText = request.originalText;
+            response.context = request.context;
             callback(response);
         }
             break;
@@ -352,6 +353,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
                 entry.traditional = request.entries[i].traditional;
                 entry.pinyin = request.entries[i].pinyin;
                 entry.definition = request.entries[i].definition;
+                entry.usage = request.entries[i].usage;
 
                 wordlist.push(entry);
 
