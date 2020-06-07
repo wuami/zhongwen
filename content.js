@@ -931,6 +931,7 @@ function makeHtml(result, showToneColors) {
         } else {
             sentence = match[2];
         }
+        sentence = sentence.replace(entry[2], '<b>' + entry[2] + '</b>');
 
         // Grammar
         if (config.grammar !== 'no' && result.grammar && result.grammar.index === i) {
