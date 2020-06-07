@@ -511,7 +511,7 @@ function triggerSearch() {
 
     let selEndList = [];
     let originalText = getText(rangeNode, selStartOffset, selEndList, 30 /*maxlength*/);
-    let context = getText(rangeNode, Math.max(selStartOffset - 30, 0), [], 60);
+    let context = getText(rangeNode, Math.max(selStartOffset - 50, 0), [], 100);
 
     // Workaround for Google Docs: remove zero-width non-joiner &zwnj;
     let text = originalText.replace(zwnj, '');
