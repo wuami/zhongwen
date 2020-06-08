@@ -923,7 +923,10 @@ function makeHtml(result, showToneColors) {
         html += '<br><span class="' + defClass + '">' + translation + '</span><br>';
 
         // Sentence
-        let pattern = new RegExp('(^|\\u3002)([^\\u3002]*' + entry[2] + '[^\\u3002]*(\\u3002?|$))');
+        let punctuation = '\\u3000-\\u303F\\uFF01\\uFF1F';
+        let pattern = new RegExp(
+            '(^|[' + punctuation + '])([^' + punctuation + ']*' + entry[2] +
+            '[^' + punctuation + ']*([' + punctuation + ']|$))');
         let match = result.context.match(pattern);
         let sentence;
         if (match == null) {
