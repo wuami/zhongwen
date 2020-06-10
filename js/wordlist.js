@@ -169,14 +169,16 @@ $(document).ready(function () {
     });
 
     $('#delete').click(function () {
-        table.rows('.bg-info').remove();
+        if (confirm("Are you sure you want to delete the selected words?")) {
+          table.rows('.bg-info').remove();
 
-        entries = table.rows().data().draw(true);
+          entries = table.rows().data().draw(true);
 
-        localStorage['wordlist'] = JSON.stringify(copyEntriesForSaving(entries));
+          localStorage['wordlist'] = JSON.stringify(copyEntriesForSaving(entries));
 
-        showListIsEmptyNotice();
-        disableButtons();
+          showListIsEmptyNotice();
+          disableButtons();
+        }
     });
 
     $('#selectAll').click(function () {
