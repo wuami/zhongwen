@@ -37,11 +37,13 @@ function showListIsEmptyNotice() {
 
 function disableButtons() {
     if (entries.length === 0) {
+        $('#saveAll').prop('disabled', true);
         $('#saveList').prop('disabled', true);
         $('#selectAll').prop('disabled', true);
         $('#deselectAll').prop('disabled', true);
         $('#delete').prop('disabled', true);
     } else {
+        $('#saveAll').prop('disabled', false);
         $('#saveList').prop('disabled', false);
         $('#selectAll').prop('disabled', false);
         $('#deselectAll').prop('disabled', false);
@@ -167,6 +169,42 @@ $(document).ready(function () {
         a.href = (window.webkitURL || window.URL).createObjectURL(saveBlob);
         a.click();
     });
+    
+    $('#saveAll').click(function () {
+        let selected = table.rows().data();
+
+        if (selected.length === 0) {
+            return;
+        }
+
+        let content = '';
+        for (let i = 0; i < selected.length; i++) {
+            let entry = selected[i];
+            content += entry.simplified;
+            content += '\t';
+            content += entry.traditional;
+            content += '\t';
+            content += entry.pinyin;
+            content += '\t';
+            if (showZhuyin) {
+                content += entry.zhuyin;
+                content += '\t';
+            }
+            content += entry.definition;
+            content += '\t';
+            content += entry.usage;
+            content += '\t';
+            content += entry.notes.replace('<i>Edit</i>', '').replace(/[\r\n]/gm, ' ');
+            content += '\r\n';
+        }
+
+        let saveBlob = new Blob([content], { "type": "text/plain" });
+        let a = document.getElementById('savelink');
+        // Handle Chrome and Firefox
+        a.href = (window.webkitURL || window.URL).createObjectURL(saveBlob);
+        a.click();
+    });
+
 
     $('#delete').click(function () {
         if (confirm("Are you sure you want to delete the selected words?")) {
