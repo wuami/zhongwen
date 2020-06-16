@@ -923,7 +923,7 @@ function makeHtml(result, showToneColors) {
         html += '<br><span class="' + defClass + '">' + translation + '</span><br>';
 
         // Sentence
-        let punctuation = '\\u3000-\\u303F\\uFF01\\uFF1F';
+        let punctuation = '\\u2026\\u3002\\u3008-\\u301B\\uFF01\\uFF1F';
         let pattern = new RegExp(
             '(^|[' + punctuation + '])([^' + punctuation + ']*' + entry[2] +
             '[^' + punctuation + ']*([' + punctuation + ']|$))');
