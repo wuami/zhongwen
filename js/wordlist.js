@@ -80,6 +80,39 @@ function copyEntryForSaving(entry) {
     return result;
 }
 
+function saveData(data) {
+    if (data.length === 0) {
+        return;
+    }
+
+    let content = '';
+    for (let i = 0; i < data.length; i++) {
+        let entry = data[i];
+        content += entry.simplified;
+        content += '\t';
+        content += entry.traditional;
+        content += '\t';
+        content += entry.pinyin;
+        content += '\t';
+        if (showZhuyin) {
+            content += entry.zhuyin;
+            content += '\t';
+        }
+        content += entry.definition;
+        content += '\t';
+        content += entry.usage;
+        content += '\t';
+        content += entry.notes.replace('<i>Edit</i>', '').replace(/[\r\n]/gm, ' ');
+        content += '\r\n';
+    }
+
+    let saveBlob = new Blob([content], { "type": "text/plain" });
+    let a = document.getElementById('savelink');
+    // Handle Chrome and Firefox
+    a.href = (window.webkitURL || window.URL).createObjectURL(saveBlob);
+    a.click();
+}
+
 $(document).ready(function () {
 
     showListIsEmptyNotice();
@@ -136,73 +169,11 @@ $(document).ready(function () {
     });
 
     $('#saveList').click(function () {
-        let selected = table.rows('.bg-info').data();
-
-        if (selected.length === 0) {
-            return;
-        }
-
-        let content = '';
-        for (let i = 0; i < selected.length; i++) {
-            let entry = selected[i];
-            content += entry.simplified;
-            content += '\t';
-            content += entry.traditional;
-            content += '\t';
-            content += entry.pinyin;
-            content += '\t';
-            if (showZhuyin) {
-                content += entry.zhuyin;
-                content += '\t';
-            }
-            content += entry.definition;
-            content += '\t';
-            content += entry.usage;
-            content += '\t';
-            content += entry.notes.replace('<i>Edit</i>', '').replace(/[\r\n]/gm, ' ');
-            content += '\r\n';
-        }
-
-        let saveBlob = new Blob([content], { "type": "text/plain" });
-        let a = document.getElementById('savelink');
-        // Handle Chrome and Firefox
-        a.href = (window.webkitURL || window.URL).createObjectURL(saveBlob);
-        a.click();
+        saveData(table.rows('.bg-info').data());
     });
     
     $('#saveAll').click(function () {
-        let selected = table.rows().data();
-
-        if (selected.length === 0) {
-            return;
-        }
-
-        let content = '';
-        for (let i = 0; i < selected.length; i++) {
-            let entry = selected[i];
-            content += entry.simplified;
-            content += '\t';
-            content += entry.traditional;
-            content += '\t';
-            content += entry.pinyin;
-            content += '\t';
-            if (showZhuyin) {
-                content += entry.zhuyin;
-                content += '\t';
-            }
-            content += entry.definition;
-            content += '\t';
-            content += entry.usage;
-            content += '\t';
-            content += entry.notes.replace('<i>Edit</i>', '').replace(/[\r\n]/gm, ' ');
-            content += '\r\n';
-        }
-
-        let saveBlob = new Blob([content], { "type": "text/plain" });
-        let a = document.getElementById('savelink');
-        // Handle Chrome and Firefox
-        a.href = (window.webkitURL || window.URL).createObjectURL(saveBlob);
-        a.click();
+        saveData(table.rows().data());
     });
 
 
