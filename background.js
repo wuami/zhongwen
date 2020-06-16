@@ -345,21 +345,26 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
                 wordlist = [];
             }
 
-            for (let i in request.entries) {
+            if (request.indices.length === 0) {
+                if (saveAllEntries) {
+                    request.indices = [...Array(request.entries.length).keys()];
+                } else {
+                    request.indices = [0];
+                }
+            }
+                
+            for (let i in request.indices) {
 
+                let index = request.indices[i];
                 let entry = {};
                 entry.timestamp = Date.now();
-                entry.simplified = request.entries[i].simplified;
-                entry.traditional = request.entries[i].traditional;
-                entry.pinyin = request.entries[i].pinyin;
-                entry.definition = request.entries[i].definition;
-                entry.usage = request.entries[i].usage;
+                entry.simplified = request.entries[index].simplified;
+                entry.traditional = request.entries[index].traditional;
+                entry.pinyin = request.entries[index].pinyin;
+                entry.definition = request.entries[index].definition;
+                entry.usage = request.entries[index].usage;
 
                 wordlist.push(entry);
-
-                if (!saveAllEntries) {
-                    break;
-                }
             }
             localStorage['wordlist'] = JSON.stringify(wordlist);
 

@@ -80,11 +80,14 @@ let savedSelStartOffset = 0;
 
 let savedSelEndList = [];
 
+let saveWordIndices = [];
+
 // regular expression for zero-width non-joiner U+200C &zwnj;
 let zwnj = /\u200c/g;
 
 function enableTab() {
     document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('keyup', onKeyUp);
     document.addEventListener('keydown', onKeyDown);
 }
 
@@ -109,6 +112,10 @@ function disableTab() {
 }
 
 function onKeyDown(keyDown) {
+
+    if (keyDown.keyCode >= 49 && keyDown.keyCode <= 57) {
+        saveWordIndices.push(keyDown.keyCode - 49);
+    }
 
     if (keyDown.ctrlKey || keyDown.metaKey) {
         return;
@@ -196,24 +203,7 @@ function onKeyDown(keyDown) {
 
         case 82: // 'r'
         {
-            let entries = [];
-            for (let j = 0; j < savedSearchResults.length; j++) {
-                let entry = {
-                    simplified: savedSearchResults[j][0],
-                    traditional: savedSearchResults[j][1],
-                    pinyin: savedSearchResults[j][2],
-                    definition: savedSearchResults[j][3],
-                    usage: savedSearchResults[j][5]
-                };
-                entries.push(entry);
-            }
-
-            chrome.runtime.sendMessage({
-                'type': 'add',
-                'entries': entries
-            });
-
-            showPopup('Added to word list.<p>Press Alt+W to open word list.', null, -1, -1);
+            saveWordIndices = [];
         }
             break;
 
@@ -377,6 +367,30 @@ function onKeyDown(keyDown) {
 
         default:
             return;
+    }
+}
+
+function onKeyUp(keyUp) {
+    if (keyUp.keyCode === 82) {
+        let entries = [];
+        for (let j = 0; j < savedSearchResults.length; j++) {
+            let entry = {
+                simplified: savedSearchResults[j][0],
+                traditional: savedSearchResults[j][1],
+                pinyin: savedSearchResults[j][2],
+                definition: savedSearchResults[j][3],
+                usage: savedSearchResults[j][5]
+            };
+            entries.push(entry);
+        }
+
+        chrome.runtime.sendMessage({
+            'type': 'add',
+            'entries': entries,
+            'indices': saveWordIndices
+        });
+
+        showPopup('Added to word list.<p>Press Alt+W to open word list.', null, -1, -1);
     }
 }
 
