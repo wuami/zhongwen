@@ -336,7 +336,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
         case 'add': {
             let json = localStorage['wordlist'];
 
-            let saveFirstEntryOnly = localStorage['saveToWordList'] === 'firstEntryOnly';
+            let saveAllEntries = localStorage['saveToWordList'] === 'allEntries';
 
             let wordlist;
             if (json) {
@@ -357,7 +357,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, callback) {
 
                 wordlist.push(entry);
 
-                if (saveFirstEntryOnly) {
+                if (!saveAllEntries) {
                     break;
                 }
             }

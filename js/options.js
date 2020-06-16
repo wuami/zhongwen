@@ -31,7 +31,7 @@ function loadVals() {
     const grammar = localStorage['grammar'] || 'yes';
     document.querySelector('#grammar').checked = grammar !== 'no';
 
-    const saveToWordList = localStorage['saveToWordList'] || 'allEntries';
+    const saveToWordList = localStorage['saveToWordList'] || 'firstEntryOnly';
     document.querySelector(`input[name="saveToWordList"][value="${saveToWordList}"]`).checked = true;
 
     const skritterTLD = localStorage['skritterTLD'] || 'com';
