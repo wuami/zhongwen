@@ -80,6 +80,25 @@ function copyEntryForSaving(entry) {
     return result;
 }
 
+function addSpans(pinyin) {
+    var words = pinyin.split(' ');
+    var newWords = [];
+    for (let i = 0; i < words.length; i++) {
+        if (words[i].includes('\u0304')) {
+            newWords.push('<span class=tone1>'.concat(words[i], '</span>'));
+        } else if (words[i].includes('\u0301')) {
+            newWords.push('<span class=tone2>'.concat(words[i], '</span>'));
+        } else if (words[i].includes('\u030c')) {
+            newWords.push('<span class=tone3>'.concat(words[i], '</span>'));
+        } else if (words[i].includes('\u0300')) {
+            newWords.push('<span class=tone4>'.concat(words[i], '</span>'));
+        } else {
+            newWords.push(words[i]);
+        }
+    }
+    return newWords.join(' ');
+}
+
 function saveData(data) {
     if (data.length === 0) {
         return;
@@ -92,7 +111,7 @@ function saveData(data) {
         content += '\t';
         content += entry.traditional;
         content += '\t';
-        content += entry.pinyin;
+        content += addSpans(entry.pinyin);
         content += '\t';
         if (showZhuyin) {
             content += entry.zhuyin;
